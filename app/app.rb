@@ -8,7 +8,7 @@ QUEUE_URL="#{ENDPOINT_URL}/000000000000/#{QUEUE_NAME}"
 
 Aws.config.update(
   region: 'ap-northeast-1',
-  credentials: Aws::Credentials.new('akid', 'secret')
+  credentials: Aws::Credentials.new('dummy', 'dummy')
 )
 
 sqs_client = Aws::SQS::Client.new(endpoint: ENDPOINT_URL)
@@ -25,11 +25,11 @@ get '/' do
   erb :index
 end
 
-post '/greet' do
+post '/messages' do
   sqs_client.send_message(
     queue_url: QUEUE_URL,
     message_body: params[:message]
   )
 
-  erb :greet
+  erb :message
 end
