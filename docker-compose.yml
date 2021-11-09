@@ -1,0 +1,36 @@
+# This docker-compose.yml is ported from LocalStack repo and modified for this project
+# https://github.com/localstack/localstack/blob/master/docker-compose.yml
+version: "3.8"
+
+services:
+  app:
+    build: ./
+    command: bundle exec ruby app/app.rb -o 0.0.0.0
+    ports:
+      - 4567:4567
+    volumes:
+      - .:/workspace
+    links:
+      - localstack
+    environment:
+      # This is used when awslocal CLI finds the localstack host
+      - LOCALSTACK_HOST=localstack
+      - AWS_REGION=ap-northeast-1
+  localstack:
+    container_name: "${LOCALSTACK_DOCKER_NAME-localstack_main}"
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+      - 4571:4571
+    environment:
+      - SERVICES=${SERVICES- }
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=${DATA_DIR- }
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - HOST_TMP_FOLDER=${TMPDIR:-/tmp/}localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      # This host is used when returning queue URLs from the SQS service to the client
+      - HOSTNAME_EXTERNAL=localstack
+    volumes:
+      - "${TMPDIR:-/tmp}/localstack:/tmp/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"

@@ -1,0 +1,26 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h2>Send a message to SQS queue</h2>
+  <form action="greet" method="POST">
+    <input type="text" name="message" value="hello world">
+    <input type="submit" value="send">
+  </form>
+
+  <h2>SQS queue URLs</h2>
+  <ul>
+  <% @urls.each do |url| %>
+    <li><%= url %></li>
+  <% end %>
+  </ul>
+
+  <h2>Messages in the SQS queue</h2>
+  <ul>
+  <% @messages.each do |message| %>
+    <li><%= message.body %></li>
+  <% end %>
+  </ul>
+</body>
+</html>
